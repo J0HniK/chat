@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../src/style.css">
+    <title>Socket.io CHAT</title>
+</head>
+<body>
+    <div class="container">
+        <header>Socket.io CHAT</header>
+        <div class="message">
+            <!-- Вывод всех сообщений будет здесь -->
+            <div id="all_mess"></div>
+        </div>
+        <form id="messForm">
+            <textarea name="message" id="message" class="form-control" placeholder="Введите сообщение"></textarea>
+            <input type="submit" value="Отправить" class="submit-btn">
+        </form>
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    $(function() {
+        var socket = io.connect();
+        var $form = $("#messForm");
+        var $textarea = $("#message");
+        var $all_messages = $("#all_mess");
+
+        $form.submit(function(event) {
+            event.preventDefault();
+
+            socket.emit("sendMessage", $textarea.val());
+            $textarea.val('');
+        });
+
+        socket.on("addMess", function(data) {
+            $all_messages.append("<div>" + data.msg + "</div>");
+        });
+    });
+</script>
+</html>
